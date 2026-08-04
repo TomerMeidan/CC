@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A4B5C6D7-E8F9-0123-ABCD-EF1234567890}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EncoderHub.Driver.MHM1SL</RootNamespace>
+    <AssemblyName>EncoderHub.Driver.MHM1SL</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- iC-Haus-Library: gives us MHM enums and structs (NativeEnums, NativeStructs are public) -->
+    <Reference Include="iC-Haus-Library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\iC-Haus-Library.1.0.2.6\lib\net472\iC-Haus-Library.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LoggerClientCS, Version=3.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\iC-Haus-Library.1.0.2.6\lib\net472\LoggerClientCS.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OperationResultManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\iC-Haus-Library.1.0.2.6\lib\net472\OperationResultManager.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EncoderHub.Abstractions\EncoderHub.Abstractions.csproj">
+      <Project>{D1A2B3C4-E5F6-7890-ABCD-EF1234567890}</Project>
+      <Name>EncoderHub.Abstractions</Name>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Local redeclarations of MHM types missing from the NuGet package -->
+    <Compile Include="Interop\NativeEnums.cs" />
+    <Compile Include="Interop\NativeStructs.cs" />
+    <Compile Include="MHM1SLDriver.cs" />
+    <Compile Include="MHM1SLDriverConfiguration.cs" />
+    <Compile Include="MHM1SLWrapper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Native DLLs bundled directly with this driver project -->
+    <None Include="runtimes\win-x64\native\MHM_1SL_interface_64.dll" />
+    <None Include="runtimes\win-x64\native\MHM_1SL_interface_64.lib" />
+    <None Include="packages.config" />
+  </ItemGroup>
+
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <!-- Copy MHM native DLL to the build output directory after every build -->
+  <Target Name="CopyMhmNative" AfterTargets="Build">
+    <ItemGroup>
+      <MhmNativeDll Include="$(MSBuildThisFileDirectory)runtimes\win-x64\native\MHM_1SL_interface_64.dll" />
+      <MhmNativeLib Include="$(MSBuildThisFileDirectory)runtimes\win-x64\native\MHM_1SL_interface_64.lib" />
+    </ItemGroup>
+    <Copy SourceFiles="@(MhmNativeDll)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(MhmNativeLib)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

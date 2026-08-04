@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E2B3C4D5-F6A7-8901-BCDE-F12345678901}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EncoderHub.Driver.PZ1SL</RootNamespace>
+    <AssemblyName>EncoderHub.Driver.PZ1SL</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp></NuGetPackageImportStamp>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- iC-Haus-Library: managed wrapper DLL that talks to the native BiSS library -->
+    <Reference Include="iC-Haus-Library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\iC-Haus-Library.1.0.2.6\lib\net472\iC-Haus-Library.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LoggerClientCS, Version=3.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\iC-Haus-Library.1.0.2.6\lib\net472\LoggerClientCS.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OperationResultManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\iC-Haus-Library.1.0.2.6\lib\net472\OperationResultManager.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The "Universal Remote" contract this driver implements -->
+    <ProjectReference Include="..\EncoderHub.Abstractions\EncoderHub.Abstractions.csproj">
+      <Project>{D1A2B3C4-E5F6-7890-ABCD-EF1234567890}</Project>
+      <Name>EncoderHub.Abstractions</Name>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="PZ1SLDriver.cs" />
+    <Compile Include="PZ1SLDriverConfiguration.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <!-- Copies the native PZ_1SL_interface_64.dll alongside the build output -->
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>NuGet package missing. Run Package Restore. Missing file: {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\iC-Haus-Library.1.0.2.6\build\net472\iC-Haus-Library.targets')"
+           Text="$([System.String]::Format('$(ErrorText)', '..\packages\iC-Haus-Library.1.0.2.6\build\net472\iC-Haus-Library.targets'))" />
+  </Target>
+  <Import Project="..\packages\iC-Haus-Library.1.0.2.6\build\net472\iC-Haus-Library.targets"
+          Condition="Exists('..\packages\iC-Haus-Library.1.0.2.6\build\net472\iC-Haus-Library.targets')" />
+</Project>
