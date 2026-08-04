@@ -87,3 +87,6 @@ secrets.json
 
 # Claude Code
 .claude/
+
+# Installer build output
+Installer/Output/
