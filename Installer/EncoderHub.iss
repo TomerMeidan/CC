@@ -10,6 +10,7 @@
 #define AppExeName      "EncoderHub.App.exe"
 ; Payload comes from the App's Release output, one level up from this script.
 #define SourceDir       "..\EncoderHub.App\bin\Release"
+#define IconFile        "..\EncoderHub.App\Assets\EncoderHub.ico"
 
 [Setup]
 ; A stable, unique GUID for this product (keep constant across versions so
@@ -25,6 +26,7 @@ UninstallDisplayName={#AppName}
 UninstallDisplayIcon={app}\{#AppExeName}
 OutputDir=Output
 OutputBaseFilename=EncoderHub-{#AppVersion}-Setup
+SetupIconFile={#IconFile}
 Compression=lzma2/max
 SolidCompression=yes
 WizardStyle=modern
